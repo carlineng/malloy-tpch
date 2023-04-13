@@ -1,0 +1,6 @@
+import "tpch.malloy"
+
+query: partsupp -> {
+  group_by:
+    supplier.s_acctbal
+}

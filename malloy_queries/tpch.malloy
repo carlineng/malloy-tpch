@@ -1,0 +1,27 @@
+source: region is table('duckdb:../data/region.parquet') {
+  primary_key: r_regionkey
+}
+
+source: nation is table('duckdb:../data/nation.parquet') {
+  primary_key: n_nationkey
+  join_one: region with n_regionkey
+}
+
+source: part is table('duckdb:../data/part.parquet') {
+  primary_key: p_partkey
+}
+
+source: supplier is table('duckdb:../data/supplier.parquet') {
+  primary_key: s_suppkey
+  join_one: nation with s_nationkey
+}
+
+source: customer is table('duckdb:../data/customer.parquet') 
+
+source: partsupp is table('duckdb:../data/partsupp.parquet') {
+  join_one: part with ps_partkey
+  join_one: supplier with ps_suppkey
+}
+
+source: lineitem is table('duckdb:../data/lineitem.parquet') 
+source: orders is table('duckdb:../data/orders.parquet')
