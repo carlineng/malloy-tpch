@@ -1,0 +1,31 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by:
+    supp_nation is supplier.nation.n_name
+    cust_nation is orders.customer.nation.n_name
+    l_year is l_shipdate.year
+
+  aggregate:
+    revenue is sum(l_extendedprice * (1-l_discount))
+
+  where:
+    l_shipdate >= @1995-01-01
+    and l_shipdate <= @1996-12-31
+    and (
+      (
+        supplier.nation.n_name = 'FRANCE'
+        and orders.customer.nation.n_name = 'GERMANY'
+      )
+      or
+      (
+        supplier.nation.n_name = 'GERMANY'
+        and orders.customer.nation.n_name = 'FRANCE'
+      )
+    )
+
+  order_by:
+    supp_nation
+    cust_nation
+    l_year
+}
