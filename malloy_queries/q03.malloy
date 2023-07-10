@@ -7,7 +7,7 @@ query: lineitem -> {
     orders.o_shippriority
 
   aggregate:
-    revenue is sum(l_extendedprice * (1 - l_discount))
+    total_revenue
 
   where:
     orders.customer.c_mktsegment = 'BUILDING'
@@ -15,7 +15,7 @@ query: lineitem -> {
     and l_shipdate > @1995-03-15
 
   order_by:
-    revenue desc
+    total_revenue desc
     o_orderdate
 
   limit: 10

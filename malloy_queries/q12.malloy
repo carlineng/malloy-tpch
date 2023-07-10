@@ -1,0 +1,15 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by: l_shipmode
+  aggregate:
+    high_line_count is sum(1) { where: orders.o_orderpriority = '1-URGENT' | '2-HIGH' }
+    low_line_count is sum(1) { where: orders.o_orderpriority != '1-URGENT' & != '2-HIGH' }
+
+  where:
+    (l_shipmode = 'MAIL' | 'SHIP')
+    and l_commitdate < l_receiptdate
+    and l_shipdate < l_commitdate
+    and l_receiptdate >= @1994-01-01
+    and l_receiptdate < @1995-01-01
+}

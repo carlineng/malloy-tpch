@@ -1,0 +1,16 @@
+import "tpch.malloy"
+
+query: customer + {
+  join_many: o is orders
+    on c_custkey = o.o_custkey
+    and o.o_comment !~ '%special%requests%'
+} -> {
+  group_by: c_custkey
+  aggregate: c_count is o.count() { where: o.o_orderkey != null }
+} -> {
+  group_by: c_count
+  aggregate: custdist is count()
+  order_by:
+    custdist desc
+    c_count desc
+}

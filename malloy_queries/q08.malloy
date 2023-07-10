@@ -13,6 +13,6 @@ query: lineitem -> {
     and part.p_type = 'ECONOMY ANODIZED STEEL'
 } -> {
   group_by: o_year
-  aggregate: mkt_share is sum(pick volume when nation = 'BRAZIL' else 0) / sum(volume)
+  aggregate: mkt_share is sum(volume) { where: nation = 'BRAZIL' } / sum(volume)
   order_by: o_year
 }

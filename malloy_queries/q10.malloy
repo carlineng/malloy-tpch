@@ -11,13 +11,13 @@ query: lineitem -> {
     orders.customer.c_comment
 
   aggregate:
-    revenue is sum(l_extendedprice * (1-l_discount))
+    total_revenue is sum(l_extendedprice * (1-l_discount))
 
   where:
     orders.o_orderdate >= @1993-10-01
     and orders.o_orderdate < @1994-01-01
     and l_returnflag = 'R'
 
-  order_by: revenue desc
+  order_by: total_revenue desc
   limit: 20
 }
