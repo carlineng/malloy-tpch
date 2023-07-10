@@ -1,0 +1,11 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by: orders.customer.nation.n_name
+  aggregate: revenue is sum(l_extendedprice * (1 - l_discount))
+  where:
+    orders.o_orderdate >= @1994-01-01
+    and orders.o_orderdate < @1995-01-01
+    and orders.customer.nation.region.r_name = 'ASIA'
+    and supplier.s_nationkey = orders.customer.c_nationkey
+}

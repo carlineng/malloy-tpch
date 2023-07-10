@@ -18,6 +18,7 @@ source: supplier is table('duckdb:../data/supplier.parquet') {
 
 source: customer is table('duckdb:../data/customer.parquet') {
   primary_key: c_custkey
+  join_one: nation on c_nationkey = nation.n_nationkey
 }
 
 source: partsupp is table('duckdb:../data/partsupp.parquet') {
@@ -33,4 +34,5 @@ source: orders is table('duckdb:../data/orders.parquet') {
 
 source: lineitem is table('duckdb:../data/lineitem.parquet') {
   join_one: orders on l_orderkey = orders.o_orderkey
+  join_one: supplier on l_suppkey = supplier.s_suppkey
 }
