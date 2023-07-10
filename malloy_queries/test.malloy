@@ -1,3 +1,0 @@
-import "model.malloy"
-
-query: lineitem -> customers_bought_something

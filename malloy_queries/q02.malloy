@@ -1,6 +1,36 @@
 import "tpch.malloy"
 
-query: partsupp -> {
+query: partsupp + {
+  join_one: min_supplycost is from(
+    partsupp -> {
+      group_by: ps_partkey
+      aggregate: min_cost is min(ps_supplycost)
+      where: supplier.nation.region.r_name = 'EUROPE'
+    }
+  ) on part.p_partkey = min_supplycost.ps_partkey
+} -> {
   group_by:
     supplier.s_acctbal
+    supplier.s_name
+    supplier.nation.n_name
+    part.p_partkey
+    part.p_mfgr
+    supplier.s_address
+    supplier.s_phone
+    supplier.s_comment
+
+  where:
+    part.p_partkey != null
+    and part.p_size = 15
+    and part.p_type ~ '%BRASS'
+    and supplier.nation.region.r_name = 'EUROPE'
+    and ps_supplycost = min_supplycost.min_cost
+
+  order_by:
+    s_acctbal desc
+    n_name
+    s_name
+    p_partkey
+
+  limit: 100
 }

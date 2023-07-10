@@ -16,7 +16,7 @@ query: lineitem -> {
     count_order is count()
 
   where:
-    l_shipdate <= '1998-09-02'
+    l_shipdate <= @1998-09-02
 
   order_by:
     l_returnflag
