@@ -1,0 +1,23 @@
+import "tpch.malloy"
+
+query: partsupp -> {
+  group_by:
+    part.p_brand
+    part.p_type
+    part.p_size
+
+  aggregate:
+    supplier_cnt is count(distinct ps_suppkey)
+
+  where:
+    part.p_brand != 'Brand#45'
+    and part.p_type !~ 'MEDIUM POLISHED%'
+    and (part.p_size = 49 | 14 | 23 | 45 | 19 | 3 | 36 | 9)
+    and supplier.s_comment !~ '%Customer%Complaints%'
+
+  order_by:
+    supplier_cnt desc
+    p_brand
+    p_type
+    p_size
+}

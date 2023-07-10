@@ -1,0 +1,23 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by: 
+    supplier.s_suppkey
+    supplier.s_name
+    supplier.s_address
+    supplier.s_phone
+  aggregate: total_revenue
+  calculate: max_rev is max_window(total_revenue)
+
+  where: 
+    l_shipdate >= @1996-01-01
+    and l_shipdate < @1996-04-01
+} -> {
+  project:
+    s_suppkey
+    s_name
+    s_address
+    s_phone
+    total_revenue
+  where: total_revenue = max_rev
+}
