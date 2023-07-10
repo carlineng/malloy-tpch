@@ -1,0 +1,12 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by: orders.o_orderpriority
+  aggregate: order_count is orders.count()
+  where:
+    orders.o_orderdate >= @1993-07-01
+    and orders.o_orderdate < @1993-10-01
+    and l_commitdate < l_receiptdate
+    and orders.o_orderkey != null
+  order_by: o_orderpriority
+}
