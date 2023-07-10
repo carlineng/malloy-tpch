@@ -1,25 +1,31 @@
 import "tpch.malloy"
 
+// TODO:
+// This query doesn't complete on DuckDB
+// The `EXISTS(...)` syntax in SQL seems to be a lot more performant
+// than the `LEFT JOIN and WHERE col = null` syntax in Malloy
+source: l2 is from(
+  lineitem -> {
+    group_by:
+      l_orderkey
+      l_suppkey
+      l_receiptdate
+      l_commitdate
+
+    where:
+      orders.o_orderstatus = 'F'
+  }
+)
+
 query: lineitem + {
-  join_many: l2 is from(
-    lineitem -> {
-      group_by:
-        l_orderkey
-        l_suppkey
-    }
-  ) on l_orderkey = l2.l_orderkey
+  join_many: l2 
+    on l_orderkey = l2.l_orderkey
     and l_suppkey != l2.l_suppkey
 
-  join_many: l3 is from(
-    lineitem -> {
-      group_by:
-        l_orderkey
-        l_suppkey
-
-      where: l_receiptdate > l_commitdate
-    }
-   ) on l_orderkey = l3.l_orderkey
+  join_many: l3 is l2
+    on l_orderkey = l3.l_orderkey
     and l_suppkey != l3.l_suppkey
+    and l_receiptdate > l_commitdate
 } -> {
   group_by: supplier.s_name
   aggregate: numwait is count()
