@@ -1,0 +1,37 @@
+import "tpch.malloy"
+
+query: lineitem + {
+  join_many: l2 is from(
+    lineitem -> {
+      group_by:
+        l_orderkey
+        l_suppkey
+    }
+  ) on l_orderkey = l2.l_orderkey
+    and l_suppkey != l2.l_suppkey
+
+  join_many: l3 is from(
+    lineitem -> {
+      group_by:
+        l_orderkey
+        l_suppkey
+
+      where: l_receiptdate > l_commitdate
+    }
+   ) on l_orderkey = l3.l_orderkey
+    and l_suppkey != l3.l_suppkey
+} -> {
+  group_by: supplier.s_name
+  aggregate: numwait is count()
+
+  where:
+    orders.o_orderstatus = 'F'
+    and l_receiptdate > l_commitdate
+    and supplier.nation.n_name = 'SAUDI ARABIA'
+    and l2.l_orderkey != null
+    and l3.l_orderkey = null
+
+  order_by:
+    numwait desc
+    s_name
+}

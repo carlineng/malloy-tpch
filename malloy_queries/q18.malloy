@@ -1,0 +1,28 @@
+import "tpch.malloy"
+
+query: lineitem + {
+  join_one: o_qty is from(
+    lineitem -> {
+      group_by: l_orderkey
+      having: sum(l_quantity) > 300
+    }
+  ) on l_orderkey = o_qty.l_orderkey
+} -> {
+  group_by:
+    orders.customer.c_name
+    orders.customer.c_custkey
+    orders.o_orderkey
+    orders.o_orderdate
+    orders.o_totalprice
+  
+  aggregate:
+    total_qty is sum(l_quantity)
+
+  where: o_qty.l_orderkey != null
+
+  order_by:
+    o_totalprice desc
+    o_orderdate
+
+  limit: 100
+}

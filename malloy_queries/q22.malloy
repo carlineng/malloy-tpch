@@ -1,0 +1,37 @@
+import "tpch.malloy"
+
+query: customer + {
+  join_many: o is orders on c_custkey = o.o_custkey
+} -> {
+  group_by:
+    c_phone
+    c_acctbal
+    cntrycode
+
+  aggregate:
+    ordercount is count(distinct o.o_orderkey)
+    avg_acctbal is all(avg(c_acctbal) {
+      where:
+        c_acctbal > 0.00 
+        and (cntrycode = '13' | '31' | '23' | '29' | '30' | '18' | '17')
+    } )
+
+  where:
+    (cntrycode = '13' | '31' | '23' | '29' | '30' | '18' | '17')
+
+  order_by: 3 asc
+} -> {
+  group_by:
+    cntrycode
+
+  aggregate:
+    numcust is count()
+    totalacctbal is sum(c_acctbal)
+
+  where:
+    ordercount = 0
+    and c_acctbal > avg_acctbal
+
+  order_by: 
+    cntrycode
+}

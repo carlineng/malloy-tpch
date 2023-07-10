@@ -19,6 +19,9 @@ source: supplier is table('duckdb:../data/supplier.parquet') {
 source: customer is table('duckdb:../data/customer.parquet') {
   primary_key: c_custkey
   join_one: nation on c_nationkey = nation.n_nationkey
+
+  dimension:
+    cntrycode is substr(c_phone, 1, 2)
 }
 
 source: partsupp is table('duckdb:../data/partsupp.parquet') {

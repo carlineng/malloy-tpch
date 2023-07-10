@@ -1,0 +1,31 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  aggregate: total_revenue
+
+  where:
+    (
+      part.p_brand = 'Brand#12'
+      and (part.p_container = 'SM CASE' | 'SM BOX' | 'SM PACK' | 'SM PKG')
+      and (l_quantity >= 1 & <= 11)
+      and (part.p_size >= 1 & <= 5)
+      and (l_shipmode = 'AIR' | 'AIR REG')
+      and l_shipinstruct = 'DELIVER IN PERSON'
+    )
+    or (
+      part.p_brand = 'Brand#23'
+      and (part.p_container = 'MED BAG' | 'MED BOX' | 'MED PKG' | 'MED PACK')
+      and (l_quantity >= 10 & <= 20)
+      and (part.p_size >= 1 & <= 10)
+      and (l_shipmode = 'AIR' | 'AIR REG')
+      and l_shipinstruct = 'DELIVER IN PERSON'
+    )
+    or (
+      part.p_brand = 'Brand#34'
+      and (part.p_container = 'LG CASE' | 'LG BOX' | 'LG PACK' | 'LG PKG')
+      and (l_quantity >= 20 & <= 30)
+      and (part.p_size >= 1 & <= 15)
+      and (l_shipmode = 'AIR' | 'AIR REG')
+      and l_shipinstruct = 'DELIVER IN PERSON'
+    )
+}
