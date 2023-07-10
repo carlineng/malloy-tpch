@@ -1,0 +1,18 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  project:
+    o_year is orders.o_orderdate.year
+    volume is l_extendedprice * (1-l_discount)
+    nation is supplier.nation.n_name
+
+  where:
+    orders.customer.nation.region.r_name = 'AMERICA'
+    and orders.o_orderdate >= @1995-01-01
+    and orders.o_orderdate <= @1996-12-31
+    and part.p_type = 'ECONOMY ANODIZED STEEL'
+} -> {
+  group_by: o_year
+  aggregate: mkt_share is sum(pick volume when nation = 'BRAZIL' else 0) / sum(volume)
+  order_by: o_year
+}

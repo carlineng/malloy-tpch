@@ -35,4 +35,6 @@ source: orders is table('duckdb:../data/orders.parquet') {
 source: lineitem is table('duckdb:../data/lineitem.parquet') {
   join_one: orders on l_orderkey = orders.o_orderkey
   join_one: supplier on l_suppkey = supplier.s_suppkey
+  join_one: part on l_partkey = part.p_partkey
+  join_one: partsupp on l_suppkey = partsupp.ps_suppkey and l_partkey = partsupp.ps_partkey
 }

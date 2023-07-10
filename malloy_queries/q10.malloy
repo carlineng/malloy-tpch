@@ -1,0 +1,23 @@
+import "tpch.malloy"
+
+query: lineitem -> {
+  group_by:
+    orders.customer.c_custkey
+    orders.customer.c_name
+    orders.customer.c_acctbal
+    orders.customer.nation.n_name
+    orders.customer.c_address
+    orders.customer.c_phone
+    orders.customer.c_comment
+
+  aggregate:
+    revenue is sum(l_extendedprice * (1-l_discount))
+
+  where:
+    orders.o_orderdate >= @1993-10-01
+    and orders.o_orderdate < @1994-01-01
+    and l_returnflag = 'R'
+
+  order_by: revenue desc
+  limit: 20
+}
