@@ -14,6 +14,7 @@ ON l1.l_orderkey = l2.l_orderkey
 AND (l1.l_suppkey != l2.l_suppkey)
 );
 
+-- This query shows lots of results:
 select * from not_equals_results 
 where l1_suppkey != l2_suppkey
 limit 100
@@ -35,6 +36,10 @@ ON l1.l_orderkey = l2.l_orderkey
 AND (l1.l_suppkey IS DISTINCT FROM l2.l_suppkey)
 );
 
+-- This query shows no results:
 select * from distinct_from_results
 where l1_suppkey IS DISTINCT FROM l2_suppkey
 ;
+
+-- For my dataset, I believe these should be identical.
+-- What am I missing?
