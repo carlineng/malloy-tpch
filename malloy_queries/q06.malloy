@@ -1,6 +1,6 @@
 import "tpch.malloy"
 
-query: lineitem -> {
+run: lineitem -> {
   aggregate: revenue is sum(l_extendedprice * l_discount)
   where:
     l_shipdate >= @1994-01-01

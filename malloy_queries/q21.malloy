@@ -3,16 +3,14 @@ import "tpch.malloy"
 // This query is implemented a bit differently from the SQL
 // due to lack of `exists` gesture in Malloy
 
-query: lineitem + {
-  join_many: l2 is from(
-    lineitem -> {
-      project:
-        l_orderkey
-        l_suppkey
-        l_receiptdate
-        l_commitdate
-    }
-  ) on l_orderkey = l2.l_orderkey
+run: lineitem extend {
+  join_many: l2 is lineitem -> {
+    select:
+      l_orderkey
+      l_suppkey
+      l_receiptdate
+      l_commitdate
+  } on l_orderkey = l2.l_orderkey
 } -> {
   group_by: 
     supplier.s_name

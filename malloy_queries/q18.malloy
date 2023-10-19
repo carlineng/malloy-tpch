@@ -1,12 +1,10 @@
 import "tpch.malloy"
 
-query: lineitem + {
-  join_one: o_qty is from(
-    lineitem -> {
-      group_by: l_orderkey
-      having: sum(l_quantity) > 300
-    }
-  ) on l_orderkey = o_qty.l_orderkey
+run: lineitem extend {
+  join_one: o_qty is lineitem -> {
+    group_by: l_orderkey
+    having: sum(l_quantity) > 300
+  } on l_orderkey = o_qty.l_orderkey
 } -> {
   group_by:
     orders.customer.c_name

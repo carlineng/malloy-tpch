@@ -1,11 +1,10 @@
 import "tpch.malloy"
 
-query: partsupp + {
-  join_one: min_val is from(
-    partsupp -> {
-      aggregate: v is sum(ps_supplycost * ps_availqty) * 0.0001
-      where: supplier.nation.n_name = 'GERMANY'
-    })
+run: partsupp extend {
+  join_one: min_val is partsupp -> {
+    aggregate: v is sum(ps_supplycost * ps_availqty) * 0.0001
+    where: supplier.nation.n_name = 'GERMANY'
+  }
 } -> {
   group_by: ps_partkey
   aggregate: value is sum(ps_supplycost * ps_availqty)

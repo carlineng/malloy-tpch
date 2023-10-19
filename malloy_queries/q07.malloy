@@ -1,6 +1,6 @@
 import "tpch.malloy"
 
-query: lineitem -> {
+run: lineitem -> {
   group_by:
     supp_nation is supplier.nation.n_name
     cust_nation is orders.customer.nation.n_name

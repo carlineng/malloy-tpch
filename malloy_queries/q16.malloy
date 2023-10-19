@@ -1,13 +1,13 @@
 import "tpch.malloy"
 
-query: partsupp -> {
+run: partsupp -> {
   group_by:
     part.p_brand
     part.p_type
     part.p_size
 
   aggregate:
-    supplier_cnt is count(distinct ps_suppkey)
+    supplier_cnt is count(ps_suppkey)
 
   where:
     part.p_brand != 'Brand#45'

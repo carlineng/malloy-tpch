@@ -1,11 +1,9 @@
 import "tpch.malloy"
 
-query: lineitem + {
-  join_one: qty_threshold is from(
-    lineitem -> { 
-      group_by: l_partkey
-      aggregate: val is 0.2 * avg(l_quantity) }
-  ) on part.p_partkey = qty_threshold.l_partkey
+run: lineitem extend {
+  join_one: qty_threshold is lineitem -> { 
+    group_by: l_partkey
+    aggregate: val is 0.2 * avg(l_quantity) } on part.p_partkey = qty_threshold.l_partkey
 } -> {
   aggregate:
     avg_yearly is sum(l_extendedprice) / 7.0

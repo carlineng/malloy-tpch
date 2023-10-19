@@ -1,12 +1,12 @@
 import "tpch.malloy"
 
-query: lineitem -> {
+run: lineitem -> {
   group_by:
     nation is supplier.nation.n_name
     o_year is orders.o_orderdate.year
 
   aggregate:
-    amount is sum(l_extendedprice * (1 - l_discount) - (partsupp.ps_supplycost * l_quantity))
+    amount is source.sum(l_extendedprice * (1 - l_discount) - (partsupp.ps_supplycost * l_quantity))
 
   where:
     part.p_name ~ '%green%'

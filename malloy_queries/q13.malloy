@@ -1,6 +1,6 @@
 import "tpch.malloy"
 
-query: customer + {
+run: customer extend {
   join_many: o is orders
     on c_custkey = o.o_custkey
     and o.o_comment !~ '%special%requests%'

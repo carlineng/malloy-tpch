@@ -1,6 +1,6 @@
 import "tpch.malloy"
 
-query: lineitem -> {
+run: lineitem -> {
   group_by: orders.o_orderpriority
   aggregate: order_count is orders.count()
   where:

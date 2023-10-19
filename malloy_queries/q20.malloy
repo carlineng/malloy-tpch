@@ -1,29 +1,27 @@
 import "tpch.malloy"
 
-query: supplier + {
-  join_one: eligible_suppliers is from(
-    lineitem -> {
-      group_by:
-        partsupp.ps_suppkey
-        partsupp.ps_availqty
-        part.p_name
+run: supplier extend {
+  join_one: eligible_suppliers is lineitem -> {
+    group_by:
+      partsupp.ps_suppkey
+      partsupp.ps_availqty
+      part.p_name
 
-      aggregate:
-        avail_threshold is 0.5 * sum(l_quantity) { where: l_shipdate >= @1994-01-01 and l_shipdate < @1995-01-01 }
+    aggregate:
+      avail_threshold is 0.5 * sum(l_quantity) { where: l_shipdate >= @1994-01-01 and l_shipdate < @1995-01-01 }
 
-      where:
-        l_shipdate >= @1994-01-01
-        and l_shipdate < @1995-01-01
-    } -> {
-      group_by:
-        ps_suppkey
+    where:
+      l_shipdate >= @1994-01-01
+      and l_shipdate < @1995-01-01
+  } -> {
+    group_by:
+      ps_suppkey
 
-      where:
-        ps_availqty > avail_threshold
-        and p_name ~ 'forest%'
-      order_by: 1
-    }
-  ) on s_suppkey = eligible_suppliers.ps_suppkey
+    where:
+      ps_availqty > avail_threshold
+      and p_name ~ 'forest%'
+    order_by: 1
+  } on s_suppkey = eligible_suppliers.ps_suppkey
 } -> {
   group_by:
     s_name

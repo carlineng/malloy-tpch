@@ -1,22 +1,22 @@
-source: region is table('duckdb:../data/region.parquet') {
+source: region is duckdb.table('../data/region.parquet') extend {
   primary_key: r_regionkey
 }
 
-source: nation is table('duckdb:../data/nation.parquet') {
+source: nation is duckdb.table('../data/nation.parquet') extend {
   primary_key: n_nationkey
   join_one: region with n_regionkey
 }
 
-source: part is table('duckdb:../data/part.parquet') {
+source: part is duckdb.table('../data/part.parquet') extend {
   primary_key: p_partkey
 }
 
-source: supplier is table('duckdb:../data/supplier.parquet') {
+source: supplier is duckdb.table('../data/supplier.parquet') extend {
   primary_key: s_suppkey
   join_one: nation with s_nationkey
 }
 
-source: customer is table('duckdb:../data/customer.parquet') {
+source: customer is duckdb.table('../data/customer.parquet') extend {
   primary_key: c_custkey
   join_one: nation on c_nationkey = nation.n_nationkey
 
@@ -24,18 +24,18 @@ source: customer is table('duckdb:../data/customer.parquet') {
     cntrycode is substr(c_phone, 1, 2)
 }
 
-source: partsupp is table('duckdb:../data/partsupp.parquet') {
+source: partsupp is duckdb.table('../data/partsupp.parquet') extend {
   join_one: part with ps_partkey
   join_one: supplier with ps_suppkey
 }
 
 
-source: orders is table('duckdb:../data/orders.parquet') {
+source: orders is duckdb.table('../data/orders.parquet') extend {
   primary_key: o_orderkey
   join_one: customer with o_custkey
 }
 
-source: lineitem is table('duckdb:../data/lineitem.parquet') {
+source: lineitem is duckdb.table('../data/lineitem.parquet') extend {
   join_one: orders on l_orderkey = orders.o_orderkey
   join_one: supplier on l_suppkey = supplier.s_suppkey
   join_one: part on l_partkey = part.p_partkey

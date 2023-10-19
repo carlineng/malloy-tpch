@@ -1,7 +1,7 @@
 import "tpch.malloy"
 
-query: lineitem -> {
-  project:
+run: lineitem -> {
+  select:
     o_year is orders.o_orderdate.year
     volume is l_extendedprice * (1-l_discount)
     nation is supplier.nation.n_name

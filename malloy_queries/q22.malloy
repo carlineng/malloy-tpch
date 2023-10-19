@@ -1,6 +1,6 @@
 import "tpch.malloy"
 
-query: customer + {
+run: customer extend {
   join_many: o is orders on c_custkey = o.o_custkey
 } -> {
   group_by:
@@ -9,7 +9,7 @@ query: customer + {
     cntrycode
 
   aggregate:
-    ordercount is count(distinct o.o_orderkey)
+    ordercount is count(o.o_orderkey)
     avg_acctbal is all(avg(c_acctbal) {
       where:
         c_acctbal > 0.00 
